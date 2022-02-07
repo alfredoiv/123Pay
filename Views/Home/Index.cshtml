@@ -1,0 +1,77 @@
+﻿@model IEnumerable<PaymentRequestViewModel>
+@{
+    ViewData["Title"] = "List of Payments";
+}
+
+<div class="text-left">
+    <h1 class="display-4">123 Payment</h1>
+    <p>Payment Provider Processing System</p>
+</div>
+<div>
+    <table id="prView" class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Client</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Merchant</th>
+                <th scope="col">Account No.</th>
+                <th scope="col">Account Name</th>
+                <th scope="col">Other Details</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Status</th>
+                <th scope="col">Processed By</th>
+                <th scope="col">Reference No.</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.CreateDate</td>
+                    <td>@item.ClientName</td>
+                    <td>@item.CustomerName</td>
+                    <td>@item.Merchant</td>
+                    <td>@item.AccountNo</td>
+                    <td>@item.AccountName</td>
+                    <td>@item.OtherDetails</td>
+                    <td>@item.Amount</td>
+                    <td>@item.Status</td>
+                    <td>@item.ProcessorName</td>
+                    <td>@item.ReferenceNo</td>
+                    <td>
+                        @if (item.Status.ToUpper() == Status.Processing || item.Status.ToUpper() == Status.Pending)
+                        {
+                            <a asp-controller="PaymentRequest" asp-action="Edit"
+                               asp-route-id="@item.Id" class="btn btn-primary" onclick="return confirm('Are you sure to process this record?');">Process Record</a>
+                        }
+                        else if (!string.IsNullOrEmpty(item.AttachmentFilePath))
+                        {
+                            <a href="~/images/@item.AttachmentFilePath" class="btn btn-success">Download Receipt</a>
+                        }
+                        else
+                        {
+                            <a href="#" class="btn btn-dark">No Receipt</a>
+                        }
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+@section Scripts
+{
+    <link href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#prView').DataTable();
+        });
+    </script>
+} 
